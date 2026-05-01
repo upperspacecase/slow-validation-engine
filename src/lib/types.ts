@@ -38,7 +38,18 @@ export type VentureHypothesis = SentenceData & {
   scorecard: Record<ScorecardKey, boolean>;
 };
 
+export type Basics = {
+  customer: string;
+  problem: string;
+};
+
+export const EMPTY_BASICS: Basics = {
+  customer: "",
+  problem: "",
+};
+
 export type AppState = {
+  basics: Basics;
   hypotheses: VentureHypothesis[];
 };
 

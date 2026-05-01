@@ -41,16 +41,21 @@ export default function Home() {
       </header>
       <Tabs tabs={TABS} active={active} onChange={setActive} />
       <div className="mx-auto max-w-5xl px-6 py-8">
-        {active === "basics" && <StepBasics />}
-        {active === "differentiation" && <StepDifferentiation />}
-        {active === "approach" && <StepApproach />}
-        {active === "tinyloops" && <StepTinyLoops />}
-        {active === "hypothesis" &&
-          (loaded ? (
-            <VentureHypothesis state={state} setState={setState} />
-          ) : (
-            <p className="text-sm text-neutral-500">Loading...</p>
-          ))}
+        {!loaded ? (
+          <p className="text-sm text-neutral-500">Loading...</p>
+        ) : (
+          <>
+            {active === "basics" && (
+              <StepBasics state={state} setState={setState} />
+            )}
+            {active === "differentiation" && <StepDifferentiation />}
+            {active === "approach" && <StepApproach />}
+            {active === "tinyloops" && <StepTinyLoops />}
+            {active === "hypothesis" && (
+              <VentureHypothesis state={state} setState={setState} />
+            )}
+          </>
+        )}
       </div>
     </main>
   );
