@@ -6,6 +6,7 @@ import { StepDifferentiation } from "@/components/StepDifferentiation";
 import { StepApproach } from "@/components/StepApproach";
 import { StepTinyLoops } from "@/components/StepTinyLoops";
 import { VentureHypothesis } from "@/components/VentureHypothesis";
+import { VentureSwitcher } from "@/components/VentureSwitcher";
 import { useAppState } from "@/lib/useAppState";
 
 type TabId =
@@ -25,7 +26,14 @@ const TABS: readonly Tab<TabId>[] = [
 
 export default function Home() {
   const [active, setActive] = useState<TabId>("basics");
-  const { state, setState, loaded } = useAppState();
+  const {
+    state,
+    setState,
+    loaded,
+    activeVenture,
+    updateActiveVenture,
+    updateFounder,
+  } = useAppState();
 
   return (
     <main className="min-h-screen text-neutral-900">
@@ -38,21 +46,40 @@ export default function Home() {
             Idea to validation, one click at a time.
           </p>
         </div>
+        {loaded && activeVenture && (
+          <div className="mx-auto max-w-5xl">
+            <VentureSwitcher
+              ventures={state.ventures}
+              activeVentureId={state.activeVentureId}
+              onSelect={(id) =>
+                setState((s) => ({ ...s, activeVentureId: id }))
+              }
+            />
+          </div>
+        )}
       </header>
       <Tabs tabs={TABS} active={active} onChange={setActive} />
       <div className="mx-auto max-w-5xl px-6 py-8">
-        {!loaded ? (
+        {!loaded || !activeVenture ? (
           <p className="text-sm text-neutral-500">Loading...</p>
         ) : (
           <>
             {active === "basics" && (
-              <StepBasics state={state} setState={setState} />
+              <StepBasics
+                venture={activeVenture}
+                founder={state.founder}
+                updateActiveVenture={updateActiveVenture}
+                updateFounder={updateFounder}
+              />
             )}
             {active === "differentiation" && <StepDifferentiation />}
             {active === "approach" && <StepApproach />}
             {active === "tinyloops" && <StepTinyLoops />}
             {active === "hypothesis" && (
-              <VentureHypothesis state={state} setState={setState} />
+              <VentureHypothesis
+                venture={activeVenture}
+                updateActiveVenture={updateActiveVenture}
+              />
             )}
           </>
         )}

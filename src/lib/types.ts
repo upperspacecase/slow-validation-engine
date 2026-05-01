@@ -32,31 +32,63 @@ export type SentenceData = {
   differentiation: string;
 };
 
-export type VentureHypothesis = SentenceData & {
-  version: number;
-  createdAt: string;
-  scorecard: Record<ScorecardKey, boolean>;
-};
-
-export type Basics = {
-  customer: string;
-  problem: string;
-};
-
-export const EMPTY_BASICS: Basics = {
-  customer: "",
-  problem: "",
-};
-
-export type AppState = {
-  basics: Basics;
-  hypotheses: VentureHypothesis[];
-};
-
 export const EMPTY_SENTENCE: SentenceData = {
   customer: "",
   problem: "",
   approach: "",
   competitors: "",
   differentiation: "",
+};
+
+export type VentureHypothesis = SentenceData & {
+  version: number;
+  createdAt: string;
+  scorecard: Record<ScorecardKey, boolean>;
+};
+
+export type Competition = {
+  gorilla: string;
+  alternatives: string;
+};
+
+export type Basics = {
+  customer: string;
+  problem: string;
+  competition: Competition;
+};
+
+export const EMPTY_BASICS: Basics = {
+  customer: "",
+  problem: "",
+  competition: { gorilla: "", alternatives: "" },
+};
+
+export type Advantage = {
+  capability: string;
+  insight: string;
+  motivation: string;
+};
+
+export const EMPTY_ADVANTAGE: Advantage = {
+  capability: "",
+  insight: "",
+  motivation: "",
+};
+
+export type Founder = {
+  advantage: Advantage;
+};
+
+export type Venture = {
+  id: string;
+  name: string;
+  createdAt: string;
+  basics: Basics;
+  hypotheses: VentureHypothesis[];
+};
+
+export type AppState = {
+  founder: Founder;
+  ventures: Venture[];
+  activeVentureId: string;
 };

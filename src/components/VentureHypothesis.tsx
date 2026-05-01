@@ -4,15 +4,15 @@ import {
   EMPTY_SCORECARD,
   EMPTY_SENTENCE,
   SCORECARD_QUESTIONS,
-  type AppState,
   type ScorecardKey,
   type SentenceData,
+  type Venture,
   type VentureHypothesis as VH,
 } from "@/lib/types";
 
 type Props = {
-  state: AppState;
-  setState: React.Dispatch<React.SetStateAction<AppState>>;
+  venture: Venture;
+  updateActiveVenture: (updater: (v: Venture) => Venture) => void;
 };
 
 type Draft = SentenceData & { scorecard: Record<ScorecardKey, boolean> };
@@ -37,8 +37,8 @@ function seedDraftFrom(last: VH | undefined): Draft {
   };
 }
 
-export function VentureHypothesis({ state, setState }: Props) {
-  const versions = state.hypotheses;
+export function VentureHypothesis({ venture, updateActiveVenture }: Props) {
+  const versions = venture.hypotheses;
   const lastVersion = versions[versions.length - 1];
   const nextVersionNumber = versions.length + 1;
 
@@ -47,13 +47,13 @@ export function VentureHypothesis({ state, setState }: Props) {
 
   const isDirty = useMemo(() => {
     if (!lastVersion) {
-      return (
+      return Boolean(
         draft.customer ||
-        draft.problem ||
-        draft.approach ||
-        draft.competitors ||
-        draft.differentiation ||
-        Object.values(draft.scorecard).some(Boolean)
+          draft.problem ||
+          draft.approach ||
+          draft.competitors ||
+          draft.differentiation ||
+          Object.values(draft.scorecard).some(Boolean),
       );
     }
     if (
@@ -75,7 +75,10 @@ export function VentureHypothesis({ state, setState }: Props) {
       version: nextVersionNumber,
       createdAt: new Date().toISOString(),
     };
-    setState((s) => ({ ...s, hypotheses: [...s.hypotheses, v] }));
+    updateActiveVenture((venture) => ({
+      ...venture,
+      hypotheses: [...venture.hypotheses, v],
+    }));
   }
 
   const viewing = selectedIdx !== null ? versions[selectedIdx] : null;
